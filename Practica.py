@@ -8,7 +8,6 @@
 #===========================================================================|
 
 #Main Funciones de logica:==============================|
- 
 def read_menu():
     while True:
         print("""
@@ -88,7 +87,32 @@ def price_update(key_search_input, change_new_price, array_dict, bodega_dict): #
     else:
         return False
 
-#case 4
+
+def add_arreglo(val_input_code, val_input_name, val_input_type, 
+                val_input_color, val_input_size, val_input_note, 
+                val_input_season, val_input_price, val_input_amount, 
+                array_dict, bodega_Dict): #case 4
+
+    #In function
+    if search_key(val_input_code, array_dict):
+        return False
+    else:
+        array_dict[val_input_code] = [
+            val_input_name,
+            val_input_type,
+            val_input_color,
+            val_input_size,
+            val_input_note,
+            val_input_season
+        ].append(array_dict)
+
+        bodega_Dict[val_input_code] = [
+            val_input_price,
+            val_input_amount
+        ]
+
+        return True
+
 
 def delete_key(key_search_input, array_dict, bodega_dict): #case 5
 
@@ -102,7 +126,7 @@ def delete_key(key_search_input, array_dict, bodega_dict): #case 5
     else:
         return False
 
-#Sub code
+#Funcion de busqueda:===================================|
 def search_key(key_search_input, array_dict):
     key_search_input.strip().upper()
 
@@ -112,8 +136,94 @@ def search_key(key_search_input, array_dict):
     
     return False
 
+#Funciones de Validacion:============================================|
 
-#==================================================|
+def validacion_codigo(code_input_take): #not pre-existing, no empty spaces
+    code_input_take = code_input_take.strip().upper()
+
+    if len(code_input_take) == 0:
+        return False
+
+    else:
+        return True
+
+def validacion_nombre(name_input_take): #no empty spaces
+    name_input_take = name_input_take.strip()
+
+    if len(name_input_take) == 0:
+        return False
+    
+    else:
+        return True
+
+def validacion_tipo(type_input_take): #no empty spaces
+    type_input_take = type_input_take.strip().lower()
+
+    if len(type_input_take) == 0:
+        return False
+    
+    else:
+        return True
+
+def validacion_color_principal(color_input_take): #no empty spaces
+    color_input_take = color_input_take.strip().lower()
+
+    if len(color_input_take) == 0:
+        return False
+    
+    else: 
+        return True
+
+def validacion_tamaño(size_input_take): #exactly 'S', 'M', 'L'
+    size_input_take = size_input_take.strip().upper()
+
+    if size_input_take not in ("S","M","L"):
+        return False
+    
+    else:
+        return True
+
+def validacion_incluye_tarjeta(note_input_take): #input s or n, True if s, False if n
+    note_input_take = note_input_take.strip().lower()
+
+    if note_input_take == "s" or note_input_take == "n":
+        return True
+    else:
+        return False
+
+def validacion_temporada(season_input_take): #no empty spaces
+    season_input_take = season_input_take.strip().lower()
+
+    if len(season_input_take) == 0:
+        return False
+    
+    else:
+        return True
+
+def validacion_precio(price_input_take): #int number > 0
+    try:
+        price_input_take = int(price_input_take)
+
+        if price_input_take > 0:
+            return True
+        
+        else:
+            return False
+    except ValueError:
+        return False
+
+def validacion_unidades(amount_input_take): #int number >= 0
+    try:
+        amount_input_take = int(amount_input_take)
+
+        if amount_input_take >= 0:
+            return True
+        
+        else:
+            return False
+    except ValueError:
+        return False
+#===================================================================|
 
 #Codigo principal: =================================================|
 
@@ -191,7 +301,72 @@ while True:
                     print("[Error] Please input an interger value.")
 
         case 4:
-            print("")
+            input_code = input("Ingrese el codigo: ")
+            if not validacion_codigo(input_code):
+                print("[Error]")
+                continue
+            
+            input_name = input("Ingrese el nombre: ")
+            if not validacion_nombre(input_name):
+                print("[Error]")
+                continue
+
+            input_type = input("Ingrese el tipo de objeto: ")
+            if not validacion_tipo(input_type):
+                print("[Error]")
+                continue
+
+            input_color = input("Ingrese el color del objeto: ")
+            if not validacion_color_principal(input_color):
+                print("[Error]")
+                continue
+
+            input_size = input("Ingrese el tamaño del objeto (S/M/L): ")
+            if not validacion_tamaño(input_size):
+                print("[Error]")
+                continue
+
+            input_note = input("Ingrese si incluye tarjeta (s/n): ")
+            if not validacion_incluye_tarjeta(input_note):
+                print("[Error]")
+                continue
+
+            incluye_tarjeta = input_note.strip().lower() == "s"
+
+            input_season = input("Ingrese la temporada del objeto: ")
+            if not validacion_temporada(input_season):
+                print("[Error]")
+                continue
+
+            input_price = input("Ingrese el valor de compra: ")
+            if not validacion_precio(input_price):
+                print("[Error]")
+                continue
+
+            input_amount = input("Ingrese la cantidad de unidades: ")
+            if not validacion_unidades(input_amount):
+                print("[Error]")
+                continue
+
+            #Else all:
+            added = add_arreglo(input_code,
+                        input_name, 
+                        input_type, 
+                        input_color, 
+                        input_size, 
+                        incluye_tarjeta, 
+                        input_season, 
+                        input_price, 
+                        input_amount, 
+                        arreglos, 
+                        bodega
+            )
+            
+            if added == True:
+                print("Arreglo agregado con exito.")
+
+            else:
+                print("Codigo ya existente.")
 
         case 5:
             remove_key = input("Ingrese el codigo a eliminar: ")
