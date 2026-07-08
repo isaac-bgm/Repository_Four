@@ -77,15 +77,18 @@ def price_search(price_min_range, price_max_range, array_dict, bodega_dict): #ca
         print("No items within price range.")
 
 
-def search_key(key_search_input, array_dict):
-    key_search_input.strip().upper()
+def price_update(key_search_input, change_new_price, array_dict, bodega_dict): #case 3
 
-    for array_key in array_dict.keys():
-        if key_search_input == array_key:
-            return True
+    if search_key(key_search_input, array_dict):
+
+        bodega_dict[key_search_input][0] = change_new_price
+
+        return True
     
-    return False
+    else:
+        return False
 
+#case 4
 
 def delete_key(key_search_input, array_dict, bodega_dict): #case 5
 
@@ -98,6 +101,16 @@ def delete_key(key_search_input, array_dict, bodega_dict): #case 5
     
     else:
         return False
+
+#Sub code
+def search_key(key_search_input, array_dict):
+    key_search_input.strip().upper()
+
+    for array_key in array_dict.keys():
+        if key_search_input == array_key:
+            return True
+    
+    return False
 
 
 #==================================================|
@@ -152,7 +165,30 @@ while True:
                 print("[Error] Please input an interger value.")
 
         case 3:
-            print("")
+            while True:
+                try:
+                    key_input = input("Porfavor ingrese el codigo a buscar: ")
+                    new_price = int(input("Porfavor ingrese el nuevo precio: "))
+
+                    if new_price <= 0:
+                        print("El precio debe ser positivo.")
+                        continue
+
+                    
+                    updated = price_update(key_input, new_price, arreglos, bodega)
+
+                    if updated == True:
+                        print("Price change was successful.")
+
+                    else:
+                        print("Key not found.")
+
+                    again = input("¿Desea actualizar otro precio (s/n)? ").strip().lower()
+
+                    if again == "n":
+                        break    
+                except ValueError:
+                    print("[Error] Please input an interger value.")
 
         case 4:
             print("")
