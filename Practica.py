@@ -7,7 +7,7 @@
 #git push origin master
 #===========================================================================|
 
-#Funciones de logica:==============================|
+#Main Funciones de logica:==============================|
  
 def read_menu():
     while True:
@@ -32,7 +32,8 @@ def read_menu():
         except ValueError:
             print("[Error] Please input a number within range (1-6).")
 
-def unidades_tipo(type_search, array_dict, bodega_dict):
+
+def unidades_tipo(type_search, array_dict, bodega_dict): #case 1
     
     type_search = type_search.strip().lower() ## any "TEXT " is converted -> "text"
     quantity_arreglos = 0
@@ -48,7 +49,8 @@ def unidades_tipo(type_search, array_dict, bodega_dict):
 
     print(f"Quantity of arreglos available of type {type_search} is {quantity_arreglos}")
 
-def price_search(price_min_range, price_max_range, array_dict, bodega_dict):
+
+def price_search(price_min_range, price_max_range, array_dict, bodega_dict): #case 2
 
     array_list_range = []
 
@@ -66,14 +68,36 @@ def price_search(price_min_range, price_max_range, array_dict, bodega_dict):
 
     if len(array_list_range) > 0:
 
-        array_list_range = array_list_range.sort()
-        
+        array_list_range.sort()
+
         for array_value in array_list_range:
             print(array_value)
     
     else:
         print("No items within price range.")
 
+
+def search_key(key_search_input, array_dict):
+    key_search_input.strip().upper()
+
+    for array_key in array_dict.keys():
+        if key_search_input == array_key:
+            return True
+    
+    return False
+
+
+def delete_key(key_search_input, array_dict, bodega_dict): #case 5
+
+    if search_key(key_search_input, array_dict):
+
+        del array_dict[key_search_input]
+        del bodega_dict[key_search_input]
+
+        return True
+    
+    else:
+        return False
 
 
 #==================================================|
@@ -134,7 +158,15 @@ while True:
             print("")
 
         case 5:
-            print("")
+            remove_key = input("Ingrese el codigo a eliminar: ")
+
+            deleted = delete_key(remove_key, arreglos, bodega)
+
+            if deleted == True:
+                print("Key removal was successful.")
+
+            else:
+                print("Key not found.")
 
         case 6:
             print("Closing system...")
